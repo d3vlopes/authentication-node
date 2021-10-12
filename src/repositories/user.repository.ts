@@ -1,5 +1,6 @@
 import { User } from "../model/user.model";
 import { db } from "../db";
+import DatabaseError from "../model/errors/database.erro.model";
 
 class UserRepository {
   async findAllUsers() {
@@ -14,18 +15,22 @@ class UserRepository {
   }
 
   async findById(uuid: string) {
-    const query = `
-      SELECT uuid, username
-      FROM application_user
-      WHERE uuid = $1
-    `;
+    try {
+      const query = `
+        SELECT uuid, username
+        FROM application_user
+        WHERE uuid = $1
+      `;
 
-    // passa os parâmetros para a query
-    const values = [uuid];
-    const { rows } = await db.query<User>(query, values);
-    const [user] = rows;
+      // passa os parâmetros para a query
+      const values = [uuid];
+      const { rows } = await db.query<User>(query, values);
+      const [user] = rows;
 
-    return user;
+      return user;
+    } catch (error) {
+      throw new DatabaseError('Erro na consulta pro ID', error);
+    }
   }
 
   async create(user: User) {
@@ -60,10 +65,10 @@ class UserRepository {
     const query = `
       DELETE FROM application_user
       WHERE uuid = $1 
-    `
+    `;
 
-    const values = [uuid]
-    await db.query<{ uuid: string }>(query, values)
+    const values = [uuid];
+    await db.query<{ uuid: string }>(query, values);
   }
 }
 
