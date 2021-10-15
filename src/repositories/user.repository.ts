@@ -29,8 +29,23 @@ class UserRepository {
 
       return user;
     } catch (error) {
-      throw new DatabaseError('Erro na consulta pro ID', error);
+      throw new DatabaseError("Erro na consulta pro ID", error);
     }
+  }
+
+  async findByUsernameAndPassword(username: string, password: string) {
+    const query = `
+      SELECT uuid, username
+      FROM application_user
+      WHERE username = $1
+      AND password = crypt($2, 'my_salt')
+    `;
+
+    const values = [username, password];
+    const { rows } = await db.query<User>(query, values);
+    const [user] = rows;
+    
+    return user || null;
   }
 
   async create(user: User) {
