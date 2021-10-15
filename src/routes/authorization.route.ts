@@ -4,6 +4,7 @@ import { Request, Response, NextFunction, Router } from "express";
 
 import ForbiddenError from "../model/errors/forbidden.error.model";
 import { basicAuthenticationMiddleware } from "../middleware/basic-authentication.middleware";
+import { JwtAuthenticationMiddleware } from "../middleware/jwt.authentication.middleware";
 
 export const authorizationRoute = Router();
 
@@ -28,5 +29,13 @@ authorizationRoute.post(
     } catch (error) {
       next(error);
     }
+  }
+);
+
+authorizationRoute.post(
+  "/token/validate",
+  JwtAuthenticationMiddleware,
+  (req: Request, res: Response, next: NextFunction) => {
+    res.sendStatus(statusCode.OK)
   }
 );
