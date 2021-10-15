@@ -1,6 +1,5 @@
 import { Router, Request, Response, NextFunction } from "express";
 import statusCodes from "http-status-codes";
-import DatabaseError  from "../model/errors/database.erro.model";
 
 import userRepository from "../repositories/user.repository";
 

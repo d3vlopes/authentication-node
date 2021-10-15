@@ -15,9 +15,11 @@ app.use(express.urlencoded({ extended: true }));
 
 // Configuração das rotas
 app.use(statusRoute);
-// Adiciona o middlweare de bearer para os endpoints da rota de users
-app.use(JwtAuthenticationMiddleware, usersRoute);
 app.use(authorizationRoute);
+
+// Adiciona o middlweare de bearer para os endpoints da rota de users
+app.use(JwtAuthenticationMiddleware)
+app.use( usersRoute);
 
 // Configurações dos handlers de erro
 app.use(errorHandler);
