@@ -1,4 +1,7 @@
+import JWT from "jsonwebtoken";
+import statusCode from "http-status-codes";
 import { Request, Response, NextFunction, Router } from "express";
+
 import ForbiddenError from "../model/errors/forbidden.error.model";
 import userRepository from "../repositories/user.repository";
 
@@ -29,12 +32,19 @@ authorizationRoute.post(
         throw new ForbiddenError("Creadenciais não preenchidas");
       }
 
+      // Busca o usuário no banco de dodos
       const user = await userRepository.findByUsernameAndPassword(
         username,
         password
       );
-      
-      console.log(user);
+
+      const payload = { username: user.username };
+      const options = { subject: user?.uuid };
+      const secretKey = "my_secret_key";
+
+      const jwt = JWT.sign(payload, secretKey, options);
+
+      res.status(statusCode.OK).json({ token: jwt });
     } catch (error) {
       next(error);
     }
