@@ -3,7 +3,6 @@ import statusCode from "http-status-codes";
 import { Request, Response, NextFunction, Router } from "express";
 
 import ForbiddenError from "../model/errors/forbidden.error.model";
-import userRepository from "../repositories/user.repository";
 import { basicAuthenticationMiddleware } from "../middleware/basic-authentication.middleware";
 
 export const authorizationRoute = Router();
